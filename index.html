@@ -2,23 +2,26 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Live Stream</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <title>Shaka Player - Live Stream</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.compiled.min.js"></script>
 </head>
 <body style="margin:0; background:#000;">
-  <video id="video" controls autoplay style="width:100%; max-width:100%; height:auto;"></video>
+  <video id="video" width="100%" controls autoplay style="max-width:100%; height:auto;"></video>
 
   <script>
-    const video = document.getElementById('video');
-    const url = 'stream.php';
+    async function initPlayer() {
+      const video = document.getElementById('video');
+      const player = new shaka.Player(video);
 
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(url);
-      hls.attachMedia(video);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = url;
+      try {
+        await player.load('stream.php');
+        console.log('The video has now been loaded!');
+      } catch (error) {
+        console.error('Error loading video:', error);
+      }
     }
+
+    document.addEventListener('DOMContentLoaded', initPlayer);
   </script>
 </body>
 </html>
